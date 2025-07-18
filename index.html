@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Park Towers DIFC Management Notices</title>
+    <meta http-equiv="refresh" content="21600">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        img, video {
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            object-fit: cover;
+            transition: opacity 1s;
+            background: #000;
+        }
+        h2 {
+            color: white;
+            text-align: center;
+            margin-top: 20%;
+        }
+        #fullscreen-btn {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<button id="fullscreen-btn" onclick="openFullscreen()">Go Fullscreen</button>
+
+<!-- Hardcoded sample slides -->
+<img src="notice_1.png" class="slide">
+<img src="notice_2.png" class="slide">
+<video class="slide" muted playsinline>
+    <source src="sample_video.mp4" type="video/mp4">
+</video>
+
+<script>
+    const slides = document.querySelectorAll('.slide');
+    let current = 0;
+
+    function showSlide(index) {
+        slides.forEach(s => {
+            s.style.opacity = 0;
+            if (s.tagName === "VIDEO") s.pause();
+        });
+
+        let active = slides[index];
+        active.style.opacity = 1;
+
+        if (active.tagName === "VIDEO") {
+            active.currentTime = 0;
+            active.play();
+
+            let videoTimeout = setTimeout(() => nextSlide(), 60000);
+
+            active.onended = () => {
+                clearTimeout(videoTimeout);
+                nextSlide();
+            };
+        } else {
+            setTimeout(() => nextSlide(), 10000);
+        }
+    }
+
+    function nextSlide() {
+        current = (current + 1) % slides.length;
+        showSlide(current);
+    }
+
+    if (slides.length > 0) {
+        showSlide(current);
+    }
+
+    setTimeout(() => {
+        location.reload();
+    }, 21600000);
+
+    function openFullscreen() {
+        const elem = document.documentElement;
+        const btn = document.getElementById('fullscreen-btn');
+
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) {
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) {
+            elem.msRequestFullscreen();
+        }
+
+        btn.style.display = 'none';
+    }
+
+    setTimeout(() => {
+        document.getElementById('fullscreen-btn').style.display = 'none';
+    }, 30000);
+</script>
+
+</body>
+</html>
